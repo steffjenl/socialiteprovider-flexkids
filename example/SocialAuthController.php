@@ -39,7 +39,7 @@ class SocialAuthController extends Controller
     {
         try {
             // validate oauth code and get remote user
-            $remoteUser = Socialite::with($service)->stateless()->user();
+            $remoteUser = Socialite::driver($service)->stateless()->user();
             // find or create local user
             $localUser = $this->findOrCreateUser($remoteUser, $service);
             // login local user
@@ -68,16 +68,20 @@ class SocialAuthController extends Controller
         // search first only with provider name and user id combination
         $authUser = User::where('provider', $provider)->where('provider_id', $remoteUser->id )->first();
         if ($authUser) {
+            $authUser->name = $remoteUser->name;
+            $authUser->save();
             // found user, return user
             return $authUser;
         }
         // search on email address without provider information
         $authUser = User::where('email', $remoteUser->email)->whereNull('provider')->whereNull('provider_id')->first();
         if ($authUser) {
+            $authUser->name = $remoteUser->name;
             $authUser->provider = $provider;
             $authUser->provider_id = $remoteUser->id;
+            $authUser->save();
             // found user with email address, update user and return saved user
-            return $authUser->save();
+            return $authUser;
         }
         // Create new user and return new user
         return User::create([

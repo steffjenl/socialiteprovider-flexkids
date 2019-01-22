@@ -19,6 +19,19 @@ FLEXKIDS_RESOURCE="https://yourdomain.com/login/redirect/flexkids"
 FLEXKIDS_AUTHURL="https://companyname.flexkids.nl/ouderapp/#/extern"
 ```
 
+### Configuration for services.php
+```
+    'flexkids' => [
+        'server' => env('FLEXKIDS_SERVER'),
+        'client_id' => env('FLEXKIDS_KEY'),
+        'client_secret' => env('FLEXKIDS_SECRET'),
+        'redirect' => env('FLEXKIDS_REDIRECT_URI'),
+        'resource' => env('FLEXKIDS_RESOURCE'),
+        'apiuser' => env('FLEXKIDS_APIUSER'),
+        'authurl' => env('FLEXKIDS_AUTHURL'),
+    ]
+```
+
 ### Routes for web
 ```
 Route::get ( '/login/redirect/{service}', 'Auth\SocialAuthController@redirect' );
